@@ -1,0 +1,24 @@
+Python mein is link sy data fetch kren then download url sy only csv files parse kren Or csv files ki data ki hr row ki dictionary bna k print krwani hai.
+import requests
+import csv
+import io
+import os
+url = "https://api.github.com/repos/CSSEGISandData/COVID-19/contents/csse_covid_19_data/csse_covid_19_daily_reports"
+response = requests.get(url)
+
+if response.status_code == 200:
+  data = response.json()
+
+  for file_info in data:
+    file_name = file_info["name"]
+    download_url = file_info["download_url"]
+    if file_name.endswith(".csv"):
+      csv_response = requests.get(download_url)
+      if csv_response.status_code == 200:
+        csv_content = csv_response.text
+        print(f"CSV File: {file_name}")
+        print(csv_content)
+      else:
+                print(f"Failed to download CSV file: {file_name}")
+else:
+    print("Failed to fetch data from GitHub API")
